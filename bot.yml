@@ -1,0 +1,6 @@
+name: Fungeons and Dragons Bot
+description: Silly commands for a silly slack team
+avatar: images/avatar.png
+slackscopes:
+  - commands
+  - bot
