@@ -36,8 +36,9 @@ controller.setupWebserver(PORT, function(err, webserver) {
     controller.createWebhookEndpoints(webserver)
 });
 
-controller.on('ambient', function(bot, message) {
+controller.on('message_received', function(bot, message) {
     if (message.token !== VERIFY_TOKEN) {
+        console.log("Unverified message:" + message.text);
         return bot.res.send(401, 'Unauthorized');
     }
     
