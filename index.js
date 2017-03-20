@@ -24,7 +24,8 @@ var markov = require('markov')(1);
 
 var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
-    "/markov": handle_markov
+    "/markov": handle_markov,
+    "/echo": handle_echo
 };
 
 controller.setupWebserver(PORT, function(err, webserver) {
@@ -156,5 +157,40 @@ function handle_markov(bot, message, params) {
     }, function() {
         return bot.res.send(200, '');
     });*/
+}
+
+function handle_echo(bot, message, params) {
+    var text = 'Whatever...'
+    if (params) {
+        var obj = params[0] == "bot" ? bot : message;
+        for (var i = 1; i < params.length; i++) {
+            obj = obj[params[i]];
+            if (obj === null || obj === undefined) {
+                text = "Couldnt find " + params[i] + " in " + obj;
+                break;
+            }
+        }
+     
+        if (obj == null || obj == undefined) {
+            text = 'null/undefined';
+        } else if (obj instanceof String) {
+            text = obj + ':(String)';
+        } else if (obj instanceof Number) {
+            text = obj + ':(Number)';
+        } else if (obj instanceof Object) {
+            text = obj + ':(Object) has keys ' + Object.keys(obj);
+        } else {
+            text = obj + ':(' + typeof obj + ') has keys ' + Object.keys(obj);
+        }
+    }
+    bot.replyPublicDelayed(message, {
+        "response_type": "in_channel",
+        "attachments": [{
+            "title": '/markov ' + params.join(' '),
+            "text": text
+        }]
+    }, function() {
+        return bot.res.send(200, '');
+    });
 }
 
