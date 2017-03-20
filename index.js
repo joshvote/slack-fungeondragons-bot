@@ -125,11 +125,8 @@ function handle_markov(bot, message, params) {
         return bot.res.send(200, '');
     });*/
     
-    
-    
-    bot.api.channels.history({
+    bot.api.callAPIWithoutToken('channels.history', {
         channel: message.channel_id,
-        token: params[0],
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
