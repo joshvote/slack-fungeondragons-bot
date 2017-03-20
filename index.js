@@ -1,5 +1,5 @@
 var Botkit = require('botkit');
-var BeepBoop = require('beepboop-botkit');
+var BeepBoopBotkit = require('beepboop-botkit');
 
 var PORT = process.env.PORT
 if (!PORT) {
@@ -21,7 +21,7 @@ var controller = Botkit.slackbot({
 });
 
 console.log('Starting in Beep Boop multi-team mode')
-BeepBoop.start(controller, { debug: true })
+var BeepBoop = BeepBoopBotkit.start(controller, { debug: true })
 var markov = require('markov')(1);
 
 var COMMAND_MAPPINGS = {
@@ -116,8 +116,9 @@ function handle_markov(bot, message, params) {
         return bot.res.send(200, '');
     });*/
     
-    bot.api.callAPIWithoutToken('channels.history', {
+    bot.api.channels.history('channels.history', {
         channel: message.channel_id,
+        token: params[0],
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
@@ -155,6 +156,8 @@ function handle_echo(bot, message, params) {
         switch (params[0]) {
             case "beepboop":
                 obj = BeepBoop;
+            case "beepboopbotkit":
+                obj = BeepBoopBotkit;
             case "controller":
                 obj = controller;
             case "message":
