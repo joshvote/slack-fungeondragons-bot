@@ -19,7 +19,6 @@ var controller = Botkit.slackbot({
 });
 
 console.log('Starting in Beep Boop multi-team mode')
-console.log("env: " + JSON.stringify(process.env));
 require('beepboop-botkit').start(controller, { debug: true })
 var markov = require('markov')(1);
 
@@ -86,6 +85,9 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
+    
+    console.log("bot keys:" + Object.keys(bot));
+    console.log("bot token:" + JSON.stringify(bot.token));
     
     var key = null;
     if (params && params.length > 0) {
