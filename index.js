@@ -38,7 +38,7 @@ controller.setupWebserver(PORT, function(err, webserver) {
 
 controller.on('message_received', function(bot, message) {
     if (message.token !== VERIFY_TOKEN) {
-        console.log("Unverified bot:" + JSON.stringify(bot));
+        console.log("Unverified bot:" + JSON.stringify( Object.keys(bot)));
         console.log("Unverified message:" + JSON.stringify(message));
         return bot.res.send(401, 'Unauthorized');
     }
