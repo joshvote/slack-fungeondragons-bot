@@ -89,7 +89,7 @@ function handle_markov(bot, message, params) {
     console.log("bot api:" + JSON.stringify(bot.api));
     console.log("bot api.channels:" + JSON.stringify(bot.api.channels));
     
-    /*var text = 'Whatever...'
+    var text = 'Whatever...'
     if (params) {
         var obj = params[0] == "bot" ? bot : (params[0] == "message" ? message : params);
         for (var i = 1; i < params.length; i++) {
@@ -99,13 +99,31 @@ function handle_markov(bot, message, params) {
                 break;
             }
         }
+     
+        if (obj instanceof String) {
+            text = obj + ':(String)';
+        } else if (obj instanceof Number) {
+            text = obj + ':(Number)';
+        } else if (obj instanceof Object) {
+            text = obj + ':(Object) has keys ' + Object.keys(obj);
+        } else {
+            text = obj + ':(' + obj.__proto__ + ') has keys ' + Object.keys(obj);
+        }
         
-        text = obj + ':(' + obj.__proto__ + ') has keys ' + Object.keys(obj);
-    }*/
+    }
+    bot.replyPublicDelayed(message, {
+        "response_type": "in_channel",
+        "attachments": [{
+            "title": '/markov ' + params.join(' '),
+            "text": text
+        }]
+    }, function() {
+        return bot.res.send(200, '');
+    });
     
-    var channelId = message.channel_id;
     
-    bot.api.channels.history({
+    
+    /*bot.api.channels.history({
         channel: message.channel_id,
         count: 2
     }, function() {
@@ -117,7 +135,7 @@ function handle_markov(bot, message, params) {
         }, function() {
             return bot.res.send(200, '');
         });
-    });
+    });*/
     
     /*var key = null;
     if (params && params.length > 0) {
@@ -126,8 +144,8 @@ function handle_markov(bot, message, params) {
         key = markov.pick();
     }
     
-    var text = markov.fill(key, 100);*/
-    /*bot.replyPublicDelayed(message, {
+    var text = markov.fill(key, 100);
+    bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
             "text": text
