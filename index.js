@@ -107,7 +107,7 @@ function handle_markov(bot, message, params) {
         } else if (obj instanceof Object) {
             text = obj + ':(Object) has keys ' + Object.keys(obj);
         } else {
-            text = obj + ':(' + obj.__proto__ + ') has keys ' + Object.keys(obj);
+            text = obj + ':(' + typeof obj + ') has keys ' + Object.keys(obj);
         }
         
     }
@@ -125,6 +125,7 @@ function handle_markov(bot, message, params) {
     
     /*bot.api.channels.history({
         channel: message.channel_id,
+        token: message.token,
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
