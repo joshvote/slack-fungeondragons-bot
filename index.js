@@ -55,7 +55,6 @@ controller.on('slash_command', function(bot, message) {
         return;
     }
     
-    var user = message.user_name;
     var params = message.text.match(/\w+|"[^"]+"/g); //split our (possibly quoted) params
 
     COMMAND_MAPPINGS[message.command](bot, message, params);    
@@ -76,7 +75,7 @@ function handle_incaseofjoshrant(bot, message, params) {
     bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
-            "title": '@' + user + ' activated emergency alert procedure',
+            "title": '@' + message.user_name + ' activated emergency alert procedure',
             "image_url": "http://i.imgur.com/wtYhyuN.png"
         }]
     }, function() {
@@ -88,6 +87,21 @@ function handle_markov(bot, message, params) {
     console.log("bot config:" + JSON.stringify(bot.config));
     console.log("bot identity:" + JSON.stringify(bot.identity));
     console.log("bot api:" + JSON.stringify(bot.api));
+    console.log("bot api.channels:" + JSON.stringify(bot.api.channels));
+    
+    var text = 'Whatever...'
+    if (params) {
+        var obj = bot;
+        for (var i = 0; i < params.length; i++) {
+            obj = obj[params[i]];
+            if (obj === null || obj === undefined) {
+                text = "Couldnt find " + params[i] + " in " + obj;
+                break;
+            }
+        }
+        
+        text = params[params.length - 1] + ': has keys ' + Object.keys(obj);
+    }
     
     var key = null;
     if (params && params.length > 0) {
@@ -100,7 +114,6 @@ function handle_markov(bot, message, params) {
     bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
-            "title": '@' + user + ' wants some markov nonsense.',
             "text": text
         }]
     }, function() {
