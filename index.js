@@ -103,14 +103,14 @@ function handle_markov(bot, message, params) {
         text = params[params.length - 1] + ': has keys ' + Object.keys(obj);
     }
     
-    var key = null;
+    /*var key = null;
     if (params && params.length > 0) {
         key = params[1];
     } else {
         key = markov.pick();
     }
     
-    var text = markov.fill(key, 100);
+    var text = markov.fill(key, 100);*/
     bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
