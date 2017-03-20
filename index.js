@@ -85,9 +85,9 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
-    
-    console.log("bot keys:" + Object.keys(bot));
-    console.log("bot token:" + JSON.stringify(bot.token));
+    console.log("bot config:" + JSON.stringify(bot.config));
+    console.log("bot identity:" + JSON.stringify(bot.identity));
+    console.log("bot api:" + JSON.stringify(bot.api));
     
     var key = null;
     if (params && params.length > 0) {
