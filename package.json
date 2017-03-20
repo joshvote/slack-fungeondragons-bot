@@ -23,6 +23,7 @@
   "homepage": "https://github.com/joshvote/slack-fungeondragons-bot#readme",
   "dependencies": {
     "beepboop-botkit": "^1.4.1",
-    "botkit": "~0.2.2"
+    "botkit": "~0.2.2",
+    "markov": "^0.0.7"
   }
 }
