@@ -15,6 +15,7 @@ if (!VERIFY_TOKEN) {
 var controller = Botkit.slackbot({
   // reconnect to Slack RTM when connection goes bad
   retry: Infinity,
+  scopes: ['channels:history', 'channels:read'],
   debug: false
 });
 
@@ -186,7 +187,7 @@ function handle_echo(bot, message, params) {
     bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
-            "title": '/markov ' + params.join(' '),
+            "title": '/echo ' + params.join(' '),
             "text": text
         }]
     }, function() {
