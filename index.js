@@ -89,7 +89,7 @@ function handle_markov(bot, message, params) {
     console.log("bot api:" + JSON.stringify(bot.api));
     console.log("bot api.channels:" + JSON.stringify(bot.api.channels));
     
-    var text = 'Whatever...'
+    /*var text = 'Whatever...'
     if (params) {
         var obj = params[0] == "bot" ? bot : (params[0] == "message" ? message : params);
         for (var i = 1; i < params.length; i++) {
@@ -101,7 +101,23 @@ function handle_markov(bot, message, params) {
         }
         
         text = obj + ':(' + obj.__proto__ + ') has keys ' + Object.keys(obj);
-    }
+    }*/
+    
+    var channelId = message.channel_id;
+    
+    bot.api.channels.history({
+        channel: message.channel_id,
+        count: 2
+    }, function() {
+        bot.replyPublicDelayed(message, {
+            "response_type": "in_channel",
+            "attachments": [{
+                "text": 'arg0:' + JSON.stringify(arguments[0]) + '\narg1:' + JSON.stringify(arguments[1]) 
+            }]
+        }, function() {
+            return bot.res.send(200, '');
+        });
+    });
     
     /*var key = null;
     if (params && params.length > 0) {
@@ -111,13 +127,13 @@ function handle_markov(bot, message, params) {
     }
     
     var text = markov.fill(key, 100);*/
-    bot.replyPublicDelayed(message, {
+    /*bot.replyPublicDelayed(message, {
         "response_type": "in_channel",
         "attachments": [{
             "text": text
         }]
     }, function() {
         return bot.res.send(200, '');
-    });
+    });*/
 }
 
