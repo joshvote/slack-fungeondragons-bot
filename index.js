@@ -163,7 +163,17 @@ function handle_markov(bot, message, params) {
 function handle_echo(bot, message, params) {
     var text = 'Whatever...'
     if (params) {
-        var obj = params[0] == "bot" ? bot : message;
+        var obj = null;
+        switch (params[0]) {
+            case "controller":
+                obj = controller;
+            case "message":
+                obj = message;
+                break;
+            default:
+                obj = bot;
+                break;
+        }
         for (var i = 1; i < params.length; i++) {
             obj = obj[params[i]];
             if (obj === null || obj === undefined) {
