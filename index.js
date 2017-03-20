@@ -100,7 +100,7 @@ function handle_markov(bot, message, params) {
             }
         }
         
-        text = params[params.length - 1] + ': has keys ' + Object.keys(obj);
+        text = obj + ':(' + obj.__proto__ + ') has keys ' + Object.keys(obj);
     }
     
     /*var key = null;
