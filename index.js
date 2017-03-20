@@ -36,11 +36,9 @@ controller.setupWebserver(PORT, function(err, webserver) {
     controller.createWebhookEndpoints(webserver)
 });
 
-controller.on('message_received', function(bot, message) {    
-    
+controller.hears('.*', ['message_received'], function(bot, message) {    
     console.log("Got message type:" + message.type);
     console.log("bot.rtm:" + bot.rtm);
-    console.log("message contents:" + JSON.stringify(message));
     console.log("message contents:" + JSON.stringify(message));
     
     if (message.text) {
