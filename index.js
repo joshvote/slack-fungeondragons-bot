@@ -50,7 +50,7 @@ controller.on('slash_command', function(bot, message) {
     if (message.token !== VERIFY_TOKEN) {
         return bot.res.send(401, 'Unauthorized');
     }
-    if (!VALID_COMMANDS[message.command]) {
+    if (!COMMAND_MAPPINGS[message.command]) {
         bot.replyAcknowledge();
         return;
     }
@@ -58,7 +58,7 @@ controller.on('slash_command', function(bot, message) {
     var user = message.user_name;
     var params = message.text.match(/\w+|"[^"]+"/g); //split our (possibly quoted) params
 
-    VALID_COMMANDS[message.command](bot, message, params);    
+    COMMAND_MAPPINGS[message.command](bot, message, params);    
 });
 
 // receive an interactive message, and reply with a message that will replace the original
