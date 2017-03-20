@@ -36,15 +36,16 @@ controller.setupWebserver(PORT, function(err, webserver) {
     controller.createWebhookEndpoints(webserver)
 });
 
-controller.on('message_received', function(bot, message) {
-    if (message.token !== VERIFY_TOKEN) {
-        console.log("Unverified bot:" + JSON.stringify( Object.keys(bot)));
-        console.log("Unverified message:" + JSON.stringify(message));
-        return bot.res.send(401, 'Unauthorized');
-    }
+controller.on('message_received', function(bot, message) {    
     
-    console.log("Got message:" + message.text);
-    markov.seed(message.text);
+    console.log("Got message type:" + message.type);
+    console.log("bot.rtm:" + bot.rtm);
+    console.log("message contents:" + JSON.stringify(message));
+    console.log("message contents:" + JSON.stringify(message));
+    
+    if (message.text) {
+        markov.seed(message.text);
+    }
 });
 
 controller.on('slash_command', function(bot, message) {
