@@ -91,8 +91,8 @@ function handle_markov(bot, message, params) {
     
     var text = 'Whatever...'
     if (params) {
-        var obj = bot;
-        for (var i = 0; i < params.length; i++) {
+        var obj = params[0] == "bot" ? bot : (params[0] == "message" ? message : params);
+        for (var i = 1; i < params.length; i++) {
             obj = obj[params[i]];
             if (obj === null || obj === undefined) {
                 text = "Couldnt find " + params[i] + " in " + obj;
