@@ -86,8 +86,8 @@ function handle_markov(bot, message, params) {
     var clientId = params[0];
     var clientSecret = params[1];
     
-    bot.api.channels.history({
     console.log(params);
+    bot.api.channels.history({
     //bot.api.callAPIWithoutToken('channels.history', {
         channel: message.channel_id,
         //client_id: params[0],
