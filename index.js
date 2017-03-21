@@ -23,7 +23,7 @@ var controller = Botkit.slackbot({
 
 console.log('Starting in Beep Boop multi-team mode')
 var BeepBoop = BeepBoopBotkit.start(controller, { debug: true, scopes: ['channels:history'] })
-var Markov = require('markov');
+var SimpleMarkov = require('simple-markov');
 
 var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
@@ -98,26 +98,17 @@ function handle_markov(bot, message, params) {
         token: token,
         count: count
     }, function(err, data) {
-        var m = Markov(1);
+        var m = new SimpleMarkov(1);
         
         for (var i = 0; i < data.messages.length; i++) {
             if (data.messages[i].user) {
-                m.seed(data.messages[i].text);
+                m.learn(data.messages[i].text);
             }
         }
         
-        var title = null;
-        if (!key) {
-            key = m.pick();
-            title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
-        } else if (m.next(key)) {
-            title = "@" + message.user_name + " requested a markov chain including '" + key + "' based on the last " + count + " messages";
-        } else {
-            title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages (Couldn't find the key '" + key + "')";
-            key = m.pick();
-        }
+        var title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
         
-        var text = m.fill(key, 20).join(' ');
+        var text = m.generateText(30);
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
