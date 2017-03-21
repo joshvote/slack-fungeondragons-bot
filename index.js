@@ -77,14 +77,18 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
-    var token = message.token;
+    /*var token = message.token;
     if (params && params.length > 0) {
         token = params[0];
-    }
+    }*/
+    
+    var clientId = params[0];
+    var clientSecret = params[1];
     
     bot.api.channels.history({
         channel: message.channel_id,
-        token: token,
+        client_id: params[0],
+        client_data: params[1],
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
