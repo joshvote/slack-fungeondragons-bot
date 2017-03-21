@@ -156,10 +156,13 @@ function handle_echo(bot, message, params) {
         switch (params[0]) {
             case "beepboop":
                 obj = BeepBoop;
+                break;
             case "beepboopbotkit":
                 obj = BeepBoopBotkit;
+                break;
             case "controller":
                 obj = controller;
+                break;
             case "message":
                 obj = message;
                 break;
