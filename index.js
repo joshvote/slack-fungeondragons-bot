@@ -77,48 +77,14 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
-    console.log("bot config:" + JSON.stringify(bot.config));
-    console.log("bot identity:" + JSON.stringify(bot.identity));
-    console.log("bot api:" + JSON.stringify(bot.api));
-    console.log("bot api.channels:" + JSON.stringify(bot.api.channels));
-    
-    /*var text = 'Whatever...'
-    if (params) {
-        var obj = params[0] == "bot" ? bot : (params[0] == "message" ? message : params);
-        for (var i = 1; i < params.length; i++) {
-            obj = obj[params[i]];
-            if (obj === null || obj === undefined) {
-                text = "Couldnt find " + params[i] + " in " + obj;
-                break;
-            }
-        }
-     
-        if (obj instanceof String) {
-            text = obj + ':(String)';
-        } else if (obj instanceof Number) {
-            text = obj + ':(Number)';
-        } else if (obj instanceof Object) {
-            text = obj + ':(Object) has keys ' + Object.keys(obj);
-        } else if (obj == null || obj == undefined) {
-            text = 'null/undefined';
-        } else {
-            text = obj + ':(' + typeof obj + ') has keys ' + Object.keys(obj);
-        }
-        
+    var token = message.token;
+    if (params && params.length > 0) {
+        token = params[0];
     }
-    bot.replyPublicDelayed(message, {
-        "response_type": "in_channel",
-        "attachments": [{
-            "title": '/markov ' + params.join(' '),
-            "text": text
-        }]
-    }, function() {
-        return bot.res.send(200, '');
-    });*/
     
     bot.api.channels.history({
         channel: message.channel_id,
-        token: params[0],
+        token: token,
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
