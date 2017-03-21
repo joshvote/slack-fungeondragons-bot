@@ -90,6 +90,7 @@ function handle_markov(bot, message, params) {
     bot.api.channels.history({
     //bot.api.callAPIWithoutToken('channels.history', {
         channel: message.channel_id,
+        token: token,
         //client_id: params[0],
         //client_data: params[1],
         count: 2
