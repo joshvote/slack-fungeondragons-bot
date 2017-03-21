@@ -103,13 +103,16 @@ function handle_markov(bot, message, params) {
         for (var i = 0; i < data.messages.length; i++) {
             m.seed(data.messages[i].text);
         }
-
+        
         var title = null;
         if (!key) {
             key = m.pick();
             title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
-        } else {
+        } else if (m.next(key)) {
             title = "@" + message.user_name + " requested a markov chain including '" + key + "' based on the last " + count + " messages";
+        } else {
+            title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages (Couldn't find the key '" + key + "')";
+            key = m.pick();
         }
         
         var text = m.fill(key, 20).join(' ');
