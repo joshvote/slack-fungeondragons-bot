@@ -116,7 +116,7 @@ function handle_markov(bot, message, params) {
         return bot.res.send(200, '');
     });*/
     
-    bot.api.channels.history('channels.history', {
+    bot.api.channels.history({
         channel: message.channel_id,
         token: params[0],
         count: 2
