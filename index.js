@@ -23,7 +23,7 @@ var controller = Botkit.slackbot({
 
 console.log('Starting in Beep Boop multi-team mode')
 var BeepBoop = BeepBoopBotkit.start(controller, { debug: true, scopes: ['channels:history'] })
-var markov = require('markov')(1);
+var Markov = require('markov');
 
 var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
@@ -78,49 +78,47 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
-    var token = message.token;
+    //Hack in and get our access token
+    var workerKey = Object.keys(BeepBoop.workers)[0];
+    var token = BeepBoop.workers[workerKey].resource.SlackAccessToken;
+    
+    var key = null;
+    var count = 500;
+    
     if (params && params.length > 0) {
-        token = params[0];
+        key = params(0);
+        if (params.length > 1) {
+            count = Number(params[1]);
+        }
     }
     
-    var clientId = params[0];
-    var clientSecret = params[1];
-    
-    console.log(params);
     bot.api.channels.history({
-    //bot.api.callAPIWithoutToken('channels.history', {
         channel: message.channel_id,
         token: token,
-        //client_id: params[0],
-        //client_data: params[1],
-        count: 2
-    }, function() {
+        count: count
+    }, function(err, data) {
+        var m = Markov(1);
+        
+        for (var i = 0; i < data.messages.length; i++) {
+            m.seed(data.messages[i].text);
+        }
+
+        if (!key) {
+            key = m.pick();
+        }
+        
+        var text = m.fill(key, 20).join(' ');
+        console.log("using key " + key + " generated " + text);
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
-            "attachments": [{
-                "text": 'arg0:' + JSON.stringify(arguments[0]) + '\narg1:' + JSON.stringify(arguments[1]) 
+            "attachments": [{,
+                 "title": "@" + message.user_name + " requested a markov chain based on the last " + count + " messages",
+                "text": text 
             }]
         }, function() {
             return bot.res.send(200, '');
         });
     });
-    
-    /*var key = null;
-    if (params && params.length > 0) {
-        key = params[1];
-    } else {
-        key = markov.pick();
-    }
-    
-    var text = markov.fill(key, 100);
-    bot.replyPublicDelayed(message, {
-        "response_type": "in_channel",
-        "attachments": [{
-            "text": text
-        }]
-    }, function() {
-        return bot.res.send(200, '');
-    });*/
 }
 
 function handle_echo(bot, message, params) {
