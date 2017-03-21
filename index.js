@@ -82,11 +82,11 @@ function handle_markov(bot, message, params) {
     var workerKey = Object.keys(BeepBoop.workers)[0];
     var token = BeepBoop.workers[workerKey].resource.SlackAccessToken;
     
-    var key = null;
+    var order = 3;
     var count = 500;
     
     if (params && params.length > 0) {
-        key = params[0].toLowerCase();
+        order = params[0].toLowerCase();
         if (params.length > 1) {
             count = Number(params[1]);
         }
@@ -98,7 +98,7 @@ function handle_markov(bot, message, params) {
         token: token,
         count: count
     }, function(err, data) {
-        var m = new SimpleMarkov(1);
+        var m = new SimpleMarkov(order);
         
         for (var i = 0; i < data.messages.length; i++) {
             if (data.messages[i].user) {
@@ -106,7 +106,7 @@ function handle_markov(bot, message, params) {
             }
         }
         
-        var title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
+        var title = "@" + message.user_name + " requested a markov chain of order " + order + " based on the last " + count + " messages";
         
         var text = m.generateText(30);
         bot.replyPublicDelayed(message, {
