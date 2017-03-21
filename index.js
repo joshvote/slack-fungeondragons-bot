@@ -86,7 +86,7 @@ function handle_markov(bot, message, params) {
     var count = 500;
     
     if (params && params.length > 0) {
-        key = params(0);
+        key = params[0];
         if (params.length > 1) {
             count = Number(params[1]);
         }
