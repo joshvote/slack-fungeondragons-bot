@@ -101,6 +101,7 @@ function handle_markov(bot, message, params) {
         var m = Markov(1);
         
         for (var i = 0; i < data.messages.length; i++) {
+            console.log(data.messages[i].user + ': ' + data.messages[i].type);
             m.seed(data.messages[i].text);
         }
         
