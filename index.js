@@ -92,6 +92,7 @@ function handle_markov(bot, message, params) {
         }
     }
     
+    //Get our message history
     bot.api.channels.history({
         channel: message.channel_id,
         token: token,
@@ -111,7 +112,7 @@ function handle_markov(bot, message, params) {
         console.log("using key " + key + " generated " + text);
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
-            "attachments": [{,
+            "attachments": [{
                  "title": "@" + message.user_name + " requested a markov chain based on the last " + count + " messages",
                 "text": text 
             }]
