@@ -24,6 +24,7 @@
   "dependencies": {
     "beepboop-botkit": "^1.4.1",
     "botkit": "~0.2.2",
-    "markov": "^0.0.7"
+    "markov": "^0.0.7",
+    "string-argv": "^0.0.2"
   }
 }

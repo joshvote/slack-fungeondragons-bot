@@ -1,5 +1,6 @@
 var Botkit = require('botkit');
 var BeepBoopBotkit = require('beepboop-botkit');
+var StringArgv = require('string-argv');
 
 var PORT = process.env.PORT
 if (!PORT) {
@@ -48,7 +49,7 @@ controller.on('slash_command', function(bot, message) {
         return;
     }
     
-    var params = message.text.match(/\w+|"[^"]+"/g); //split our (possibly quoted) params
+    var params = StringArgv(message.text);
 
     COMMAND_MAPPINGS[message.command](bot, message, params);    
 });
@@ -77,20 +78,20 @@ function handle_incaseofjoshrant(bot, message, params) {
 }
 
 function handle_markov(bot, message, params) {
-    /*var token = message.token;
+    var token = message.token;
     if (params && params.length > 0) {
         token = params[0];
-    }*/
+    }
     
     var clientId = params[0];
     var clientSecret = params[1];
     
-    //bot.api.channels.history({
+    bot.api.channels.history({
     console.log(params);
-    bot.api.callAPIWithoutToken('channels.history', {
+    //bot.api.callAPIWithoutToken('channels.history', {
         channel: message.channel_id,
-        client_id: params[0],
-        client_data: params[1],
+        //client_id: params[0],
+        //client_data: params[1],
         count: 2
     }, function() {
         bot.replyPublicDelayed(message, {
