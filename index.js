@@ -104,16 +104,19 @@ function handle_markov(bot, message, params) {
             m.seed(data.messages[i].text);
         }
 
+        var title = null;
         if (!key) {
             key = m.pick();
+            title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
+        } else {
+            title = "@" + message.user_name + " requested a markov chain including '" + key + "' based on the last " + count + " messages";
         }
         
         var text = m.fill(key, 20).join(' ');
-        console.log("using key " + key + " generated " + text);
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
-                 "title": "@" + message.user_name + " requested a markov chain based on the last " + count + " messages",
+                 "title": title,
                 "text": text 
             }]
         }, function() {
