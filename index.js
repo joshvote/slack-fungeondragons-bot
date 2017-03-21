@@ -82,14 +82,9 @@ function handle_markov(bot, message, params) {
     var workerKey = Object.keys(BeepBoop.workers)[0];
     var token = BeepBoop.workers[workerKey].resource.SlackAccessToken;
     
-    var order = 3;
     var count = 500;
-    
     if (params && params.length > 0) {
-        order = params[0].toLowerCase();
-        if (params.length > 1) {
-            count = Number(params[1]);
-        }
+        count = Number(params[1]);
     }
     
     //Get our message history
