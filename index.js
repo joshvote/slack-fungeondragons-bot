@@ -16,12 +16,12 @@ if (!VERIFY_TOKEN) {
 var controller = Botkit.slackbot({
   // reconnect to Slack RTM when connection goes bad
   retry: Infinity,
-  scopes: ['channels:history', 'channels:read'],
+  send_via_rtm: true,
   debug: false
 });
 
 console.log('Starting in Beep Boop multi-team mode')
-var BeepBoop = BeepBoopBotkit.start(controller, { debug: true })
+var BeepBoop = BeepBoopBotkit.start(controller, { debug: true, scopes: ['channels:history'] })
 var markov = require('markov')(1);
 
 var COMMAND_MAPPINGS = {
