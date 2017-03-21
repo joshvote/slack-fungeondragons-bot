@@ -23,7 +23,7 @@ var controller = Botkit.slackbot({
 
 console.log('Starting in Beep Boop multi-team mode')
 var BeepBoop = BeepBoopBotkit.start(controller, { debug: true, scopes: ['channels:history'] })
-var SimpleMarkov = require('simple-markov');
+var MarkovChain = require('markovchain');
 
 var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
@@ -98,17 +98,17 @@ function handle_markov(bot, message, params) {
         token: token,
         count: count
     }, function(err, data) {
-        var m = new SimpleMarkov(order);
         
+        var m = new MarkovChain('');
         for (var i = 0; i < data.messages.length; i++) {
             if (data.messages[i].user) {
-                m.learn(data.messages[i].text);
+                m.parse(data.messages[i].text);
             }
         }
         
-        var title = "@" + message.user_name + " requested a markov chain of order " + order + " based on the last " + count + " messages";
+        var title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
         
-        var text = m.generateText(30);
+        var text = m.process();
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
