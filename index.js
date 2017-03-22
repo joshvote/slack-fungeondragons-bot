@@ -24,10 +24,13 @@ var controller = Botkit.slackbot({
 console.log('Starting in Beep Boop multi-team mode')
 var BeepBoop = BeepBoopBotkit.start(controller, { debug: true, scopes: ['channels:history'] })
 var MarkovChain = require('markovchain');
+var JSMegaHal = require('jsmegahal');
+
 
 var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
     "/markov": handle_markov,
+    "/megahal": handle_megahal,
     "/echo": handle_echo
 };
 
@@ -84,7 +87,7 @@ function handle_markov(bot, message, params) {
     
     var count = 500;
     if (params && params.length > 0) {
-        count = Number(params[1]);
+        count = Number(params[0]);
     }
     
     //Get our message history
@@ -104,6 +107,50 @@ function handle_markov(bot, message, params) {
         var title = "@" + message.user_name + " requested a markov chain based on the last " + count + " messages";
         
         var text = m.process();
+        bot.replyPublicDelayed(message, {
+            "response_type": "in_channel",
+            "attachments": [{
+                 "title": title,
+                "text": text 
+            }]
+        }, function() {
+            return bot.res.send(200, '');
+        });
+    });
+}
+
+function handle_megahal(bot, message, params) {
+    //Hack in and get our access token
+    var workerKey = Object.keys(BeepBoop.workers)[0];
+    var token = BeepBoop.workers[workerKey].resource.SlackAccessToken;
+    
+    var count = 500;
+    var order = 4;
+    if (params && params.length > 0) {
+        count = Number(params[0]);
+        
+        if (params.length > 1) {
+            order = Number(params[1]);
+        }
+    }
+    
+    //Get our message history
+    bot.api.channels.history({
+        channel: message.channel_id,
+        token: token,
+        count: count
+    }, function(err, data) {
+        
+        var m = new JSMegaHal(order);
+        for (var i = 0; i < data.messages.length; i++) {
+            if (data.messages[i].user) {
+                m.add(data.messages[i].text);
+            }
+        }
+        
+        var title = "@" + message.user_name + " requested a megahal response of order " + order +  " based on the last " + count + " messages";
+        
+        var text = m.getReply();
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
