@@ -126,12 +126,9 @@ function handle_megahal(bot, message, params) {
     
     var count = 500;
     var order = 4;
+    var question = undefined;
     if (params && params.length > 0) {
-        count = Number(params[0]);
-        
-        if (params.length > 1) {
-            order = Number(params[1]);
-        }
+        question = params.join(' ');
     }
     
     //Get our message history
@@ -148,9 +145,14 @@ function handle_megahal(bot, message, params) {
             }
         }
         
-        var title = "@" + message.user_name + " requested a megahal response of order " + order +  " based on the last " + count + " messages";
+        var title = null;
+        if (question) {
+            title = "@" + message.user_name + " requested a megahal response to: '" + question + "'";
+        } else {
+            title = "@" + message.user_name + " requested a random megahal response";
+        }
         
-        var text = m.getReply();
+        var text = m.getReply(question);
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
