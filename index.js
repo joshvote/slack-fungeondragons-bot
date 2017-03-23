@@ -129,15 +129,6 @@ function handle_megahal(bot, message, params) {
     var question = undefined;
     if (params && params.length > 0) {
         question = params.join(' ');
-        
-        try {
-            order = Number(params[params.length - 1]);
-            if (params.length == 1) {
-                question = undefined;
-            }
-        } catch(err) {
-            order = 4;
-        }
     }
     
     //Get our message history
@@ -153,6 +144,10 @@ function handle_megahal(bot, message, params) {
         for (var i = 0; i < data.messages.length; i++) {
             var msg = data.messages[i];
             
+            if (!msg.user) {
+                continue;
+            }
+            
             if (msg.user !== currentUser) {
                 if (currentMessage) {
                     m.add(currentMessage);
@@ -164,13 +159,14 @@ function handle_megahal(bot, message, params) {
                 currentMessage += '. ' + msg.text; 
             }
         }
+        
         m.add(currentMessage);
         
         var title = null;
         if (question) {
-            title = "@" + message.user_name + " requested a megahal response to: '" + question + "' of order " + order;
+            title = "@" + message.user_name + " requested a megahal response to: '" + question + "';
         } else {
-            title = "@" + message.user_name + " requested a random megahal response of order " + order;
+            title = "@" + message.user_name + " requested a random megahal response";
         }
         
         var text = m.getReply(question);
