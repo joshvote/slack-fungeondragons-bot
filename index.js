@@ -124,7 +124,7 @@ function handle_megahal(bot, message, params) {
     var workerKey = Object.keys(BeepBoop.workers)[0];
     var token = BeepBoop.workers[workerKey].resource.SlackAccessToken;
     
-    var count = 500;
+    var count = 1000;
     var order = 2;
     var question = undefined;
     if (params && params.length > 0) {
