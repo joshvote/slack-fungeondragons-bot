@@ -164,7 +164,7 @@ function handle_megahal(bot, message, params) {
         
         var title = null;
         if (question) {
-            title = "@" + message.user_name + " requested a megahal response to: '" + question + "';
+            title = "@" + message.user_name + " requested a megahal response to: '" + question + "'";
         } else {
             title = "@" + message.user_name + " requested a random megahal response";
         }
