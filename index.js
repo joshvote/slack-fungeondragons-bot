@@ -145,11 +145,23 @@ function handle_megahal(bot, message, params) {
     }, function(err, data) {
         
         var m = new JSMegaHal(order);
+        var currentUser = null;
+        var currentMessage = null;
         for (var i = 0; i < data.messages.length; i++) {
-            if (data.messages[i].user) {
-                m.add(data.messages[i].text);
+            var msg = data.messages[i];
+            
+            if (msg.user !== currentUser) {
+                if (currentMessage) {
+                    m.add(currentMessage);
+                }
+                currentUser = msg.user;
+                currentMessage = msg.text;
+            } else {
+                //Same user with multiple messages should be combined
+                currentMessage += '. ' + msg.text; 
             }
         }
+        m.add(currentMessage);
         
         var title = null;
         if (question) {
