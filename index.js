@@ -150,6 +150,7 @@ function handle_megahal(bot, message, params) {
             
             if (msg.user !== currentUser) {
                 if (currentMessage) {
+                    console.log("Adding: " + currentMessage);
                     m.add(currentMessage);
                 }
                 currentUser = msg.user;
@@ -160,6 +161,7 @@ function handle_megahal(bot, message, params) {
             }
         }
         
+        console.log("Adding: " + currentMessage);
         m.add(currentMessage);
         
         var title = null;
