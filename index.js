@@ -132,6 +132,9 @@ function handle_megahal(bot, message, params) {
         
         try {
             order = Number(params[params.length - 1]);
+            if (params.length == 1) {
+                question = undefined;
+            }
         } catch(err) {
             order = 4;
         }
