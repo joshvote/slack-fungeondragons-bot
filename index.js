@@ -207,7 +207,7 @@ function download_image(uri, callback) {
     }
     
     var tmpobj = tmp.fileSync({
-        postfix: extension;
+        postfix: extension
     });
     
     request(uri).pipe(fs.createWriteStream(tmpobj.name)).on('close', function(response) {
