@@ -4,7 +4,7 @@ var StringArgv = require('string-argv');
 var tmp = require('tmp');
 var fs = require('fs');
 var request = require('request');
-var Asciify = require('asciify-image');
+var Ascii = require('ascii');
 
 tmp.setGracefulCleanup();
 
@@ -228,14 +228,10 @@ function handle_ascii(bot, message, params) {
             return;
         }
         
-        var options = {
-            fit:    'box',
-            width:  64
-        }
-         
-        Asciify(tmpobj.name, options, function (asciified) {
+        var pic = new Ascii(tmpobj.name);
+        pic.convert(function (err, result) {
             var title = "@" + message.user_name + " requested ASCII art for '" + uri + "'";
-            var text = asciified;
+            var text = err || result;
             bot.replyPublicDelayed(message, {
                 "response_type": "in_channel",
                 "attachments": [{
