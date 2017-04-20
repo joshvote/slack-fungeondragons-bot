@@ -1,6 +1,7 @@
 var Botkit = require('botkit');
 var BeepBoopBotkit = require('beepboop-botkit');
 var StringArgv = require('string-argv');
+var imageToAscii = require("image-to-ascii");
 
 var PORT = process.env.PORT
 if (!PORT) {
@@ -31,7 +32,8 @@ var COMMAND_MAPPINGS = {
     "/incaseofjoshrant": handle_incaseofjoshrant,
     "/markov": handle_markov,
     "/megahal": handle_megahal,
-    "/echo": handle_echo
+    "/echo": handle_echo,
+    "/ascii": handle_ascii
 };
 
 controller.setupWebserver(PORT, function(err, webserver) {
@@ -175,6 +177,35 @@ function handle_megahal(bot, message, params) {
             "attachments": [{
                  "title": title,
                 "text": text 
+            }]
+        }, function() {
+            return bot.res.send(200, '');
+        });
+    });
+}
+
+function handle_ascii(bot, message, params) {
+    var uri = params[0];
+    if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
+        bot.replyPrivateDelayed(message, {
+            "response_type": "in_channel",
+            "text": "The first parameter must be a full URI."
+        }, function() {
+            return bot.res.send(200, '');
+        });
+        return;
+    }
+    
+    var title = "@" + message.user_name + " requested ASCII art for '" + uri + "'";
+    imageToAscii(uri, {
+        colored: false
+    }, (err, converted) => {
+        var escaped = converted.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        bot.replyPublicDelayed(message, {
+            "response_type": "in_channel",
+            "attachments": [{
+                "title": title,
+                "text":  "```" + escaped + "```";
             }]
         }, function() {
             return bot.res.send(200, '');
