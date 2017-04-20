@@ -198,12 +198,12 @@ function download_image(uri, callback) {
         return;
     }
     
-    var extension = 'jpg';
+    var extension = '.jpg';
     var contentType = res.headers['content-length'];
     if (contentType.indexOf('gif') >= 0) {
-        extension = 'gif';
+        extension = '.gif';
     } else if (contentType.indexOf('png') >= 0) {
-        extension = 'png';
+        extension = '.png';
     }
     
     var tmpobj = tmp.fileSync({
