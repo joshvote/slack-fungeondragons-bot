@@ -199,7 +199,7 @@ function download_image(uri, filename, callback) {
     }
     
     request(uri).pipe(fs.createWriteStream(filename)).on('close', function(response) {
-        callback(response.statusCode == 200);
+        callback(true);
     });
   });
 }
