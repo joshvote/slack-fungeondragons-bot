@@ -218,6 +218,7 @@ function handle_ascii(bot, message, params) {
         
         var image = new AsciiArt.Image({
             width: 64,
+            alphabet: 'variant1',
             filepath: tmpobj.name
         });
         
@@ -229,7 +230,8 @@ function handle_ascii(bot, message, params) {
                 "response_type": "in_channel",
                 "attachments": [{
                     "title": title,
-                    "text":  "```" + text + "```"
+                    "text":  "```" + text + "```",
+                    "mrkdwn_in": ["text"]
                 }]
             }, function() {
                 return bot.res.send(200, '');
