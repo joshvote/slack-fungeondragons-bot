@@ -205,7 +205,7 @@ function handle_ascii(bot, message, params) {
             "response_type": "in_channel",
             "attachments": [{
                 "title": title,
-                "text":  "```" + escaped + "```";
+                "text":  "```" + escaped + "```"
             }]
         }, function() {
             return bot.res.send(200, '');
