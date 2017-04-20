@@ -189,30 +189,41 @@ function handle_megahal(bot, message, params) {
     });
 }
 
-function download_image(uri, filename, callback) {
+function download_image(uri, callback) {
     request.head(uri, function(err, res, body){
     
     //Anything bigger than 5MB is too much
     if (res.headers['content-length'] > (1024 * 1024 * 5)) {
-        callback(false);
+        callback(false, null);
         return;
     }
     
-    request(uri).pipe(fs.createWriteStream(filename)).on('close', function(response) {
-        callback(true);
+    var extension = 'jpg';
+    var contentType = res.headers['content-length'];
+    if (contentType.indexOf('gif') >= 0) {
+        extension = 'gif';
+    } else if (contentType.indexOf('png') >= 0) {
+        extension = 'png';
+    }
+    
+    var tmpobj = tmp.fileSync({
+        postfix: extension;
+    });
+    
+    request(uri).pipe(fs.createWriteStream(tmpobj.name)).on('close', function(response) {
+        callback(true, tmpobj);
     });
   });
 }
 
 function handle_ascii(bot, message, params) {
     var uri = params[0];
-    var tmpobj = tmp.fileSync();
-    console.log("File: ", tmpobj.name);
-    console.log("Filedescriptor: ", tmpobj.fd);
     
-    download_image(uri, tmpobj.name, function(success) {
+    download_image(uri, function(success, tmpobj) {
         if (!success) {
-            tmpobj.removeCallback();
+            if (tmpobj) {
+                tmpobj.removeCallback();
+            }
             return;
         }
         
