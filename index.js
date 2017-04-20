@@ -221,7 +221,7 @@ function handle_ascii(bot, message, params) {
             width:  64
         }
          
-        asciify(tmpobj.name, options, function (asciified) {
+        Asciify(tmpobj.name, options, function (asciified) {
             var title = "@" + message.user_name + " requested ASCII art for '" + uri + "'";
             var text = asciified;
             bot.replyPublicDelayed(message, {
