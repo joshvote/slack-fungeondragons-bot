@@ -200,12 +200,12 @@ function handle_ascii(bot, message, params) {
     imageToAscii(uri, {
         colored: false
     }, (err, converted) => {
-        var escaped = converted.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        var text = err || converted 
         bot.replyPublicDelayed(message, {
             "response_type": "in_channel",
             "attachments": [{
                 "title": title,
-                "text":  "```" + escaped + "```"
+                "text":  "```" + text + "```"
             }]
         }, function() {
             return bot.res.send(200, '');
