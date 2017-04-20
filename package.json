@@ -27,7 +27,7 @@
     "markovchain": "^1.0.2",
     "string-argv": "^0.0.2",
     "jsmegahal": "^1.2.4",
-    "ascii-art": "^1.4.2",
+    "asciify-image": "^0.0.8",
     "tmp": "^0.0.31",
     "request": "^2.81.0"
   }
