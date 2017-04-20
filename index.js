@@ -1,7 +1,12 @@
 var Botkit = require('botkit');
 var BeepBoopBotkit = require('beepboop-botkit');
 var StringArgv = require('string-argv');
-var imageToAscii = require("image-to-ascii");
+var tmp = require('tmp');
+var fs = require('fs');
+var request = require('request');
+var AsciiArt = require('ascii-art');
+
+tmp.setGracefulCleanup();
 
 var PORT = process.env.PORT
 if (!PORT) {
@@ -184,31 +189,53 @@ function handle_megahal(bot, message, params) {
     });
 }
 
-function handle_ascii(bot, message, params) {
-    var uri = params[0];
-    if (!uri.startsWith("http://") && !uri.startsWith("https://")) {
-        bot.replyPrivateDelayed(message, {
-            "response_type": "in_channel",
-            "text": "The first parameter must be a full URI."
-        }, function() {
-            return bot.res.send(200, '');
-        });
+function download_image(uri, filename, callback) {
+    request.head(uri, function(err, res, body){
+    
+    //Anything bigger than 5MB is too much
+    if (res.headers['content-length'] > (1024 * 1024 * 5)) {
+        callback(false);
         return;
     }
     
-    var title = "@" + message.user_name + " requested ASCII art for '" + uri + "'";
-    imageToAscii(uri, {
-        colored: false
-    }, (err, converted) => {
-        var text = err || converted 
-        bot.replyPublicDelayed(message, {
-            "response_type": "in_channel",
-            "attachments": [{
-                "title": title,
-                "text":  "```" + text + "```"
-            }]
-        }, function() {
-            return bot.res.send(200, '');
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', function(response) {
+        callback(response.statusCode == 200);
+    });
+  });
+}
+
+function handle_ascii(bot, message, params) {
+    var uri = params[0];
+    var tmpobj = tmp.fileSync();
+    console.log("File: ", tmpobj.name);
+    console.log("Filedescriptor: ", tmpobj.fd);
+    
+    download_image(uri, tmpobj.name, function(success) {
+        if (!success) {
+            tmpobj.removeCallback();
+            return;
+        }
+        
+        var image = new AsciiArt.Image({
+            width: 64,
+            filepath: tmpobj.name
+        });
+        
+        image.write(function(err, rendered) {
+            
+            var title = "@" + message.user_name + " requested ASCII art for '" + uri + "'";
+            var text = err || rendered;
+            bot.replyPublicDelayed(message, {
+                "response_type": "in_channel",
+                "attachments": [{
+                    "title": title,
+                    "text":  "```" + text + "```"
+                }]
+            }, function() {
+                return bot.res.send(200, '');
+            });
+            
+            tmpobj.removeCallback();
         });
     });
 }
